@@ -7,26 +7,22 @@
 //
 
 import UIKit
-import Alamofire
 import SwiftyJSON
 import CoreLocation
 
-class HomeViewController: UIViewController, CLLocationManagerDelegate {
+class HomeViewController: UIViewController {
 
-    
     @IBOutlet weak var regionLabel: UILabel!
     @IBOutlet weak var degreeLabel: UILabel!
-    @IBOutlet weak var degreeSymbolLabel: UILabel!
+    @IBOutlet weak var unitLabel: UILabel!
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    let weather = Weather()
-
+    let networkService = NetworkService.sharedInstance
     let locationManager:CLLocationManager = CLLocationManager()
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,7 +30,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         self.degreeLabel.text = ""
         self.weatherLabel.text = ""
         self.descriptionLabel.text = ""
-        self.degreeSymbolLabel.text = ""
+        self.unitLabel.text = ""
         
         
         locationManager.requestWhenInUseAuthorization()
@@ -47,7 +43,11 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             spinner.startAnimating()
         }
     }
-    
+
+}
+
+
+extension HomeViewController: CLLocationManagerDelegate{
     
     // If we have been deined access give the user the option to change it
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -75,7 +75,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let location = locations.first {
@@ -84,19 +83,27 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             
             locationManager.stopUpdatingLocation()
             
-            weather.getCurrentWeather(lat: Float(lat), lon: Float(lon)) { (jsonData) in
+            networkService.getCurrentWeather(lat: Float(lat), lon: Float(lon)) { (jsonData) in
                 
-                self.regionLabel.text = jsonData["name"].string
-                self.degreeLabel.text = "\(Int(jsonData["main"]["temp"].floatValue))"
-                self.weatherLabel.text = jsonData["weather"][0]["main"].stringValue
-                self.descriptionLabel.text = jsonData["weather"][0]["description"].stringValue
-                self.degreeSymbolLabel.text = "ºC"
+                let region = jsonData["name"].stringValue
+                let degree = Int(jsonData["main"]["temp"].floatValue)
+                let weather = jsonData["weather"][0]["main"].stringValue
+                let description = jsonData["weather"][0]["description"].stringValue
+                let unit = "ºC"
+                
+                let currentWeather = WeatherModel(region: region, degree: degree, weather: weather, description: description, unit: unit)
+                
+                self.regionLabel.text = currentWeather.region
+                self.degreeLabel.text = "\(currentWeather.degree)"
+                self.weatherLabel.text = currentWeather.weather
+                self.descriptionLabel.text = currentWeather.description
+                self.unitLabel.text = currentWeather.unit
                 
                 self.spinner.stopAnimating()
                 self.spinner.alpha = 0
             }
         }
     }
-
+    
 }
 

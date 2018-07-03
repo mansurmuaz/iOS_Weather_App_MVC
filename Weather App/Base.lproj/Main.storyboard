@@ -80,10 +80,10 @@
                     <navigationItem key="navigationItem" title="Weather App" id="jjV-WX-EuR"/>
                     <connections>
                         <outlet property="degreeLabel" destination="4Zh-BZ-XCs" id="MFZ-Fy-xEY"/>
-                        <outlet property="degreeSymbolLabel" destination="p5E-1i-dSh" id="jYn-lr-n3q"/>
                         <outlet property="descriptionLabel" destination="cSR-X3-x05" id="RLg-Wy-Oeg"/>
                         <outlet property="regionLabel" destination="acy-gK-DQt" id="ZWZ-rf-ASF"/>
                         <outlet property="spinner" destination="3Ax-Yw-3Xq" id="jHu-sc-pKR"/>
+                        <outlet property="unitLabel" destination="p5E-1i-dSh" id="97k-nm-Q0c"/>
                         <outlet property="weatherLabel" destination="hFf-wf-QiT" id="ENt-sZ-6v2"/>
                     </connections>
                 </viewController>

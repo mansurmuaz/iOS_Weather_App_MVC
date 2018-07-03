@@ -1,5 +1,5 @@
 //
-//  Weather.swift
+//  NetworkService.swift
 //  Weather App
 //
 //  Created by Mansur Muaz  Ekici on 3.07.2018.
@@ -10,10 +10,12 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-class Weather {
+struct NetworkService {
+    
+    static let sharedInstance = NetworkService()
     
     func getCurrentWeather(lat: Float, lon: Float, completion: @escaping (JSON) -> ()) {
-     
+        
         let url = "https://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&appid=5393eb001d6f5b930af18785a01fa6f3"
         
         Alamofire.request(url).validate().responseJSON { response in
