@@ -148,13 +148,9 @@ extension HomeViewController: UITableViewDelegate{
         }
         return cell
     }
-    
 
-    
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
             
             deleteLocation(index: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)

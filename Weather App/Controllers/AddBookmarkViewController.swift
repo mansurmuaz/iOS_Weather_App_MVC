@@ -37,11 +37,6 @@ class AddBookmarkViewController: UIViewController {
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     @objc func addAnnotation(press: UILongPressGestureRecognizer){
         
@@ -62,7 +57,6 @@ class AddBookmarkViewController: UIViewController {
                     print(error.debugDescription)
                 }else{
                     if let place = placemark?[0]{
-                        print(place)
                         if let locality = place.locality{
                             annotation.title = locality
                         }
@@ -82,8 +76,7 @@ class AddBookmarkViewController: UIViewController {
                 if annotation.title != "My Location"{
                     let latitude = annotation.coordinate.latitude
                     let longitude = annotation.coordinate.longitude
-                    
-                    //save to CoreData
+
                     let newLocation = NSEntityDescription.insertNewObject(forEntityName: "Location", into: context)
                     
                     newLocation.setValue(latitude, forKey: "latitude")
@@ -102,8 +95,6 @@ class AddBookmarkViewController: UIViewController {
                     navigationController?.popViewController(animated: true)
                 }
             }
-            
-            
         }else{
             print("add annotation alert")
         }
@@ -124,7 +115,6 @@ extension AddBookmarkViewController: CLLocationManagerDelegate{
             let region = MKCoordinateRegionMake(location, span)
             
             self.mapView.setRegion(region, animated: true)
-            
             self.mapView.showsUserLocation = true
         }
     }
