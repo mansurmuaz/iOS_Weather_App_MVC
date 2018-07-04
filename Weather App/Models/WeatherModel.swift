@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class WeatherModel {
     
@@ -16,12 +17,12 @@ class WeatherModel {
     var description: String
     var unit: String
 
-    init(region: String, degree: Int, weather: String, description: String, unit: String) {
-        self.region = region
-        self.degree = degree
-        self.weather = weather
-        self.description = description
-        self.unit = unit
+    init(json: JSON) {
+        self.region = json["name"].stringValue
+        self.degree = Int(json["main"]["temp"].doubleValue)
+        self.weather = json["weather"][0]["main"].stringValue
+        self.description = json["weather"][0]["description"].stringValue
+        self.unit = "ºC"
     }
     
 }

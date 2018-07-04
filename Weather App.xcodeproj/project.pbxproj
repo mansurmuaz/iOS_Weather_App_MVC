@@ -16,6 +16,7 @@
 		854CE8DB20EB5AF5007C8E10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 854CE8D920EB5AF5007C8E10 /* LaunchScreen.storyboard */; };
 		854CE8E620EB5AF5007C8E10 /* Weather_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CE8E520EB5AF5007C8E10 /* Weather_AppTests.swift */; };
 		854CE8F120EB5AF5007C8E10 /* Weather_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CE8F020EB5AF5007C8E10 /* Weather_AppUITests.swift */; };
+		854CE90B20EBA5E4007C8E10 /* AddBookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CE90A20EBA5E4007C8E10 /* AddBookmarkViewController.swift */; };
 		8567D28320EBB3D500DCAB5D /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8567D28220EBB3D500DCAB5D /* NetworkService.swift */; };
 		8567D28720EBB90500DCAB5D /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8567D28620EBB90500DCAB5D /* WeatherModel.swift */; };
 		8F80B76153EEE4E362F3C573 /* Pods_Weather_AppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1145E3BC4754E87DF810EEBB /* Pods_Weather_AppUITests.framework */; };
@@ -61,6 +62,7 @@
 		854CE8EC20EB5AF5007C8E10 /* Weather AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Weather AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		854CE8F020EB5AF5007C8E10 /* Weather_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather_AppUITests.swift; sourceTree = "<group>"; };
 		854CE8F220EB5AF5007C8E10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		854CE90A20EBA5E4007C8E10 /* AddBookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBookmarkViewController.swift; sourceTree = "<group>"; };
 		8567D28220EBB3D500DCAB5D /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		8567D28620EBB90500DCAB5D /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		CD0897276E27F669AAF2AD3C /* Pods_Weather_AppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Weather_AppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				854CE8CF20EB5AF4007C8E10 /* HomeViewController.swift */,
+				854CE90A20EBA5E4007C8E10 /* AddBookmarkViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 				8567D28320EBB3D500DCAB5D /* NetworkService.swift in Sources */,
 				854CE8D620EB5AF4007C8E10 /* Weather_App.xcdatamodeld in Sources */,
 				854CE8D020EB5AF4007C8E10 /* HomeViewController.swift in Sources */,
+				854CE90B20EBA5E4007C8E10 /* AddBookmarkViewController.swift in Sources */,
 				854CE8CE20EB5AF4007C8E10 /* AppDelegate.swift in Sources */,
 				8567D28720EBB90500DCAB5D /* WeatherModel.swift in Sources */,
 			);
@@ -589,6 +593,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4Y7HE698XG;
 				INFOPLIST_FILE = "Weather App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -607,6 +612,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4Y7HE698XG;
 				INFOPLIST_FILE = "Weather App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
