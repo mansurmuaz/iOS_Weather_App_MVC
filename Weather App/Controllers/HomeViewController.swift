@@ -18,8 +18,11 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
+    @IBOutlet weak var bookmarksView: UIView!
     
     var appDelegate: AppDelegate!
     var context: NSManagedObjectContext!
@@ -29,6 +32,7 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     let locationManager:CLLocationManager = CLLocationManager()
     
     var locations: [Location] = []
+    var displayingLocations: [Location] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,10 +56,14 @@ class HomeViewController: UIViewController, UITableViewDataSource {
         }
         
         getLocations()
+        displayingLocations = locations
+        tableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         getLocations()
+        displayingLocations = locations
+        tableView.reloadData()
     }
     
     func getLocations() {
@@ -69,7 +77,6 @@ class HomeViewController: UIViewController, UITableViewDataSource {
         do{
             if let locationsData = try context.fetch(request) as? [Location]{
                 locations = locationsData
-                tableView.reloadData()
             }
         }catch{
             print("Error while fetching data")
@@ -77,14 +84,16 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     }
     
     func deleteLocation(index: Int) {
-        let deletedLocation = locations[index]
+
+        let deletedLocation = displayingLocations[index]
         context.delete(deletedLocation)
         do {
             try context.save()
         } catch {
             print("Error while deleting location")
         }
-        locations.remove(at: index)
+        getLocations()
+        displayingLocations.remove(at: index)
     }
     
     func showLocationDisabledPopUp() {
@@ -128,21 +137,20 @@ extension HomeViewController: UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locations.count
+        return displayingLocations.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        if !locations.isEmpty {
+        if !displayingLocations.isEmpty {
             
-            cell.textLabel?.text = locations[indexPath.row].name
+            cell.textLabel?.text = displayingLocations[indexPath.row].name
             
-            networkService.getWeather(lat: locations[indexPath.row].latitude, lon: locations[indexPath.row].longitude) { (jsonData) in
+            networkService.getWeather(lat: displayingLocations[indexPath.row].latitude, lon: displayingLocations[indexPath.row].longitude) { (jsonData) in
                 
                 let weather = WeatherModel(json: jsonData)
-                
                 cell.detailTextLabel?.text = "\(weather.degree)\(weather.unit)"
             }
         }
@@ -195,3 +203,19 @@ extension HomeViewController: CLLocationManagerDelegate{
     }
 }
 
+extension HomeViewController: UISearchBarDelegate{
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        guard !searchText.isEmpty else {
+            displayingLocations = locations
+            tableView.reloadData()
+            return
+        }
+        displayingLocations = locations.filter({ (location) -> Bool in
+             location.name!.lowercased().contains(searchText.lowercased())
+        })
+        tableView.reloadData()
+    }
+    
+}

@@ -83,9 +83,13 @@ class AddBookmarkViewController: UIViewController {
                     newLocation.setValue(longitude, forKey: "longitude")
                     
                     if let locality = annotation.title{
-                        newLocation.setValue(locality, forKey: "name")
+                        if locality != "" {
+                            newLocation.setValue(locality, forKey: "name")
+                        }else{
+                            newLocation.setValue("Unknown Location", forKey: "name")
+                        }
                     }else{
-                        newLocation.setValue("", forKey: "name")
+                        newLocation.setValue("Unknown Location", forKey: "name")
                     }
                     do {
                         try context.save()
