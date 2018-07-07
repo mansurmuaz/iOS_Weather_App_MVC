@@ -64,7 +64,6 @@ class AddBookmarkViewController: UIViewController {
                 }
             }
             mapView.addAnnotation(annotation)
-        
         }
     }
     

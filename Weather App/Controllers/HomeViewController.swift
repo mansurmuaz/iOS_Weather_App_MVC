@@ -67,6 +67,8 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         getLocations()
         displayingLocations = locations
         searchBar.text = ""
@@ -130,6 +132,7 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
         if segue.identifier == "toDetails" {
             let detailsController = segue.destination as! DetailsViewController
             
@@ -139,6 +142,7 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
         self.view.endEditing(true)
     }
 }
