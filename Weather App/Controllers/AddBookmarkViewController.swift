@@ -64,7 +64,6 @@ class AddBookmarkViewController: UIViewController {
                 }
             }
             mapView.addAnnotation(annotation)
-        
         }
     }
     
@@ -83,7 +82,7 @@ class AddBookmarkViewController: UIViewController {
                     newLocation.setValue(longitude, forKey: "longitude")
                     
                     if let locality = annotation.title{
-                        if locality != "" {
+                        if locality != "" && locality != nil {
                             newLocation.setValue(locality, forKey: "name")
                         }else{
                             newLocation.setValue("Unknown Location", forKey: "name")
@@ -120,6 +119,8 @@ extension AddBookmarkViewController: CLLocationManagerDelegate{
             
             self.mapView.setRegion(region, animated: true)
             self.mapView.showsUserLocation = true
+            
+            manager.stopUpdatingLocation()
         }
     }
 }

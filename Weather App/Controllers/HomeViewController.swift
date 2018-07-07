@@ -11,12 +11,16 @@ import CoreLocation
 import CoreData
 
 class HomeViewController: UIViewController, UITableViewDataSource {
-
-    @IBOutlet weak var regionLabel: UILabel!
+    
+    @IBOutlet weak var backroundImage: UIImageView!
+    
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var degreeLabel: UILabel!
     @IBOutlet weak var unitLabel: UILabel!
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var windLabel: UILabel!
+    @IBOutlet weak var humidityLabel: UILabel!
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -37,11 +41,13 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.regionLabel.text = ""
+        self.nameLabel.text = ""
         self.degreeLabel.text = ""
         self.weatherLabel.text = ""
         self.descriptionLabel.text = ""
         self.unitLabel.text = ""
+        self.windLabel.text = ""
+        self.humidityLabel.text = ""
 
         //deleteAllRecords()
         
@@ -61,9 +67,22 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         getLocations()
         displayingLocations = locations
+        searchBar.text = ""
         tableView.reloadData()
+        
+//        backroundImage.image?.getColors({ (color) in
+//            UIView.animate(withDuration: 1.0) {
+//                self.navigationController?.navigationBar.barTintColor = color.background
+//                self.navigationController?.navigationBar.tintColor = color.secondary
+//                let textAttributes = [NSAttributedStringKey.foregroundColor:color.detail!]
+//                self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+//            }
+//        })
+        
     }
     
     func getLocations() {
@@ -95,25 +114,8 @@ class HomeViewController: UIViewController, UITableViewDataSource {
         getLocations()
         displayingLocations.remove(at: index)
     }
-    
-    func showLocationDisabledPopUp() {
-        let alertController = UIAlertController(title: "Background Location Access Disabled",
-                                                message: "In order to display weather at your location, we need your location data!",
-                                                preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
-            if let url = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        }
-        alertController.addAction(openAction)
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
 
+    //For now
     func deleteAllRecords() {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let context = delegate.persistentContainer.viewContext
@@ -127,6 +129,21 @@ class HomeViewController: UIViewController, UITableViewDataSource {
         } catch {
             print ("There was an error")
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if segue.identifier == "toDetails" {
+            let detailsController = segue.destination as! DetailsViewController
+            
+            detailsController.location = displayingLocations[(tableView.indexPathForSelectedRow?.row)!]
+            detailsController.image = backroundImage.image
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.view.endEditing(true)
     }
 }
 
@@ -165,23 +182,36 @@ extension HomeViewController: UITableViewDelegate{
         }
     }
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toDetails", sender: self)
+    }
     
 }
 
 extension HomeViewController: CLLocationManagerDelegate{
 
-    
-    // If we have been deined access give the user the option to change it
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if(status == CLAuthorizationStatus.denied) {
-            showLocationDisabledPopUp()
+            let alertController = UIAlertController(title: "Background Location Access Disabled",
+                                                    message: "In order to display weather at your location, we need your location data!",
+                                                    preferredStyle: .alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+                if let url = URL(string: UIApplicationOpenSettingsURLString) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+            alertController.addAction(openAction)
+            
+            self.present(alertController, animated: true, completion: nil)
         }
     }
 
-
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+
         if let location = locations.first {
             let lon = location.coordinate.longitude
             let lat = location.coordinate.latitude
@@ -190,15 +220,24 @@ extension HomeViewController: CLLocationManagerDelegate{
     
                 let currentWeather = WeatherModel(json: jsonData)
                 
-                self.regionLabel.text = currentWeather.region
+                self.nameLabel.text = currentWeather.name
                 self.degreeLabel.text = "\(currentWeather.degree)"
                 self.weatherLabel.text = currentWeather.weather
                 self.descriptionLabel.text = currentWeather.description
                 self.unitLabel.text = currentWeather.unit
+                self.windLabel.text = "\(currentWeather.wind)"
+                self.humidityLabel.text = "\(currentWeather.humidity)"
+                
+                UIView.transition(with: self.backroundImage,
+                                  duration: 1,
+                                  options: .transitionCrossDissolve,
+                                  animations: {self.backroundImage.image = currentWeather.image },
+                                  completion: nil)
                 
                 self.spinner.stopAnimating()
                 self.spinner.alpha = 0
             }
+            manager.stopUpdatingLocation()
         }
     }
 }
@@ -206,7 +245,6 @@ extension HomeViewController: CLLocationManagerDelegate{
 extension HomeViewController: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         guard !searchText.isEmpty else {
             displayingLocations = locations
             tableView.reloadData()
@@ -216,6 +254,10 @@ extension HomeViewController: UISearchBarDelegate{
              location.name!.lowercased().contains(searchText.lowercased())
         })
         tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
     
 }

@@ -14,10 +14,26 @@ struct NetworkService {
     
     static let sharedInstance = NetworkService()
     
+    let baseURL = "https://api.openweathermap.org/data/2.5"
+    let apiKey = "5393eb001d6f5b930af18785a01fa6f3"
+    
     func getWeather(lat: Double, lon: Double, completion: @escaping (JSON) -> ()) {
+        let url = "\(baseURL)/weather?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
+        Alamofire.request(url).validate().responseJSON { response in
+            switch response.result {
+            case .success:
         
-        let url = "https://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&appid=5393eb001d6f5b930af18785a01fa6f3"
-        
+                let resultJSON = JSON(response.result.value!)
+                completion(resultJSON)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+ 
+    func getFiveDaysWeather(lat: Double, lon: Double, completion: @escaping (JSON) -> ()) {
+        let url = "\(baseURL)/forecast?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
         Alamofire.request(url).validate().responseJSON { response in
             switch response.result {
             case .success:
@@ -29,7 +45,5 @@ struct NetworkService {
                 print(error)
             }
         }
-        
     }
-    
 }
