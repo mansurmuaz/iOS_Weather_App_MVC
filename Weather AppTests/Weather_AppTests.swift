@@ -8,29 +8,68 @@
 
 import XCTest
 @testable import Weather_App
+import SwiftyJSON
 
 class Weather_AppTests: XCTestCase {
     
+    var expectedResult = JSON()
+    let jsonString = "{\"coord\":{\"lon\":-122.09,\"lat\":37.39},\n\"sys\":{\"type\":3,\"id\":168940,\"message\":0.0297,\"country\":\"US\",\"sunrise\":1427723751,\"sunset\":1427768967},\n\"weather\":[{\"id\":800,\"main\":\"Clear\",\"description\":\"Sky is Clear\",\"icon\":\"01n\"}],\n\"base\":\"stations\",\n\"main\":{\"temp\":285.68,\"humidity\":74,\"pressure\":1016.8,\"temp_min\":284.82,\"temp_max\":286.48},\n\"wind\":{\"speed\":0.96,\"deg\":285.001},\n\"clouds\":{\"all\":0},\n\"dt\":1427700245,\n\"id\":0,\n\"name\":\"Mountain View\",\n\"cod\":200}"
+    
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        expectedResult = JSON(parseJSON: self.jsonString)
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testGetWeather() {
+        
+        let networkService = NetworkService.sharedInstance
+        let expectations = expectation(description: "The Response result match the expected results")
+        
+        networkService.getWeather(lat: 41, lon: 29) { (json) in
+            let city = json["name"].stringValue
+            XCTAssertEqual(city, "Üsküdar")
+            expectations.fulfill()
+        }
+        
+        waitForExpectations(timeout: 2) { (error) in
+            if let error = error {
+                print("Failed : \(error.localizedDescription)")
+            }
         }
     }
     
+    
+    func testGetFiveDaysWeather() {
+        let networkService = NetworkService.sharedInstance
+       
+        let expectations = expectation(description: "The Response result match the expected results")
+        networkService.getFiveDaysWeather(lat: 41, lon: 29) { (json) in
+            let city = json["city"]["name"].stringValue
+            XCTAssertEqual(city, "Üsküdar")
+            expectations.fulfill()
+        }
+        
+        waitForExpectations(timeout: 2) { (error) in
+            if let error = error {
+                print("Failed : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    
+    func testWeatherModel(){
+        let weatherModel = WeatherModel(json: expectedResult)
+        
+        XCTAssertEqual(weatherModel.name, "Mountain View")
+        XCTAssertEqual(weatherModel.degree, Int(285.68))
+        XCTAssertEqual(weatherModel.weather, "Clear")
+        XCTAssertEqual(weatherModel.description, "Sky is Clear")
+        XCTAssertEqual(weatherModel.wind, 0.96)
+        XCTAssertEqual(weatherModel.humidity, 74)
+        XCTAssertEqual(weatherModel.date, "")
+        XCTAssertEqual(weatherModel.unit, "ºC")
+        XCTAssertEqual(weatherModel.image,  #imageLiteral(resourceName: "clear sky night"))
+    }
 }
