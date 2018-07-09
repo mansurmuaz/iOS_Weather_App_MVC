@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		21C71998A01E43D2293099EE /* Pods_Weather_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A859A45A6202641B1F2B848 /* Pods_Weather_App.framework */; };
-		8533B7C120EE4AB800429984 /* UIImageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8533B7C020EE4AB800429984 /* UIImageColors.swift */; };
+		854941E420F37BE4005951D3 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854941E320F37BE4005951D3 /* WeatherProvider.swift */; };
+		854941E620F39292005951D3 /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854941E520F39292005951D3 /* NetworkServiceMock.swift */; };
 		854CE8CE20EB5AF4007C8E10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CE8CD20EB5AF4007C8E10 /* AppDelegate.swift */; };
 		854CE8D020EB5AF4007C8E10 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854CE8CF20EB5AF4007C8E10 /* HomeViewController.swift */; };
 		854CE8D320EB5AF4007C8E10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 854CE8D120EB5AF4007C8E10 /* Main.storyboard */; };
@@ -50,7 +51,8 @@
 		435F8101863B45DA2E8E07F2 /* Pods-Weather AppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather AppUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather AppUITests/Pods-Weather AppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		55FA1251EA256A12B5AD6F86 /* Pods-Weather AppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather AppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Weather AppTests/Pods-Weather AppTests.release.xcconfig"; sourceTree = "<group>"; };
 		5A16AB44E874F25917C227D0 /* Pods-Weather App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Weather App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Weather App/Pods-Weather App.debug.xcconfig"; sourceTree = "<group>"; };
-		8533B7C020EE4AB800429984 /* UIImageColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIImageColors.swift; path = "Weather App/UIImageColors.swift"; sourceTree = SOURCE_ROOT; };
+		854941E320F37BE4005951D3 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
+		854941E520F39292005951D3 /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
 		854CE8CA20EB5AF4007C8E10 /* Weather App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Weather App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		854CE8CD20EB5AF4007C8E10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		854CE8CF20EB5AF4007C8E10 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +103,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		854941E220F37BC0005951D3 /* Content Provider */ = {
+			isa = PBXGroup;
+			children = (
+				854941E320F37BE4005951D3 /* WeatherProvider.swift */,
+			);
+			path = "Content Provider";
+			sourceTree = "<group>";
+		};
 		854CE8C120EB5AF4007C8E10 = {
 			isa = PBXGroup;
 			children = (
@@ -126,7 +136,7 @@
 		854CE8CC20EB5AF4007C8E10 /* Weather App */ = {
 			isa = PBXGroup;
 			children = (
-				8533B7C020EE4AB800429984 /* UIImageColors.swift */,
+				854941E220F37BC0005951D3 /* Content Provider */,
 				8567D28420EBB8DD00DCAB5D /* Models */,
 				854CE8FF20EB6A9A007C8E10 /* Controllers */,
 				8567D28520EBB8E400DCAB5D /* Service */,
@@ -180,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				8567D28220EBB3D500DCAB5D /* NetworkService.swift */,
+				854941E520F39292005951D3 /* NetworkServiceMock.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -419,10 +430,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8533B7C120EE4AB800429984 /* UIImageColors.swift in Sources */,
+				854941E620F39292005951D3 /* NetworkServiceMock.swift in Sources */,
 				8567D28320EBB3D500DCAB5D /* NetworkService.swift in Sources */,
 				854CE8D620EB5AF4007C8E10 /* Weather_App.xcdatamodeld in Sources */,
 				854CE8D020EB5AF4007C8E10 /* HomeViewController.swift in Sources */,
+				854941E420F37BE4005951D3 /* WeatherProvider.swift in Sources */,
 				854CE90B20EBA5E4007C8E10 /* AddBookmarkViewController.swift in Sources */,
 				8567D28D20EDF16800DCAB5D /* DetailsViewController.swift in Sources */,
 				854CE8CE20EB5AF4007C8E10 /* AppDelegate.swift in Sources */,

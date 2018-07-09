@@ -31,8 +31,8 @@ class HomeViewController: UIViewController, UITableViewDataSource {
     var appDelegate: AppDelegate!
     var context: NSManagedObjectContext!
     
-    let networkService = NetworkService.sharedInstance
-
+    var weatherProvider: WeatherProviderProtocol = WeatherProvider(networkService: NetworkService.sharedInstance)
+    
     let locationManager:CLLocationManager = CLLocationManager()
     
     var locations: [Location] = []
@@ -138,6 +138,7 @@ class HomeViewController: UIViewController, UITableViewDataSource {
             
             detailsController.location = displayingLocations[(tableView.indexPathForSelectedRow?.row)!]
             detailsController.image = backroundImage.image
+            detailsController.weatherProvider = weatherProvider
         }
     }
     
@@ -165,9 +166,7 @@ extension HomeViewController: UITableViewDelegate{
             
             cell.textLabel?.text = displayingLocations[indexPath.row].name
             
-            networkService.getWeather(lat: displayingLocations[indexPath.row].latitude, lon: displayingLocations[indexPath.row].longitude) { (jsonData) in
-                
-                let weather = WeatherModel(json: jsonData)
+            weatherProvider.getWeather(dayCount: .one, lat: displayingLocations[indexPath.row].latitude, lon: displayingLocations[indexPath.row].longitude) { (weather) in
                 cell.detailTextLabel?.text = "\(weather.degree)\(weather.unit)"
             }
         }
@@ -216,10 +215,8 @@ extension HomeViewController: CLLocationManagerDelegate{
             let lon = location.coordinate.longitude
             let lat = location.coordinate.latitude
 
-            networkService.getWeather(lat: lat, lon: lon) { (jsonData) in
-    
-                let currentWeather = WeatherModel(json: jsonData)
-                
+            
+            weatherProvider.getWeather(dayCount: .one,  lat: lat, lon: lon) { (currentWeather) in
                 self.nameLabel.text = currentWeather.name
                 self.degreeLabel.text = "\(currentWeather.degree)"
                 self.weatherLabel.text = currentWeather.weather
@@ -237,6 +234,7 @@ extension HomeViewController: CLLocationManagerDelegate{
                 self.spinner.stopAnimating()
                 self.spinner.alpha = 0
             }
+            
             manager.stopUpdatingLocation()
         }
     }

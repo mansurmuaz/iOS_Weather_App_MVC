@@ -27,23 +27,20 @@ class DetailsViewController: UIViewController, UITableViewDataSource {
     var location = Location()
     var weatherArray = [WeatherModel]()
     
-    let networkService = NetworkService.sharedInstance
+    var weatherProvider: WeatherProviderProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         backgroundImage.image = image
-        
         getCurrentWeather()
         getFiveDaysWeather()
         
     }
 
     func getCurrentWeather() {
-        networkService.getWeather(lat: location.latitude, lon: location.longitude) { (jsonData) in
-            
-            let currentWeather = WeatherModel(json: jsonData)
-            
+        
+        weatherProvider.getWeather(dayCount: .one, lat: location.latitude, lon: location.longitude) { (currentWeather) in
             self.nameLabel.text = currentWeather.name
             self.degreeLabel.text = "\(currentWeather.degree)"
             self.weatherLabel.text = currentWeather.weather
@@ -61,16 +58,10 @@ class DetailsViewController: UIViewController, UITableViewDataSource {
     }
     
     func getFiveDaysWeather(){
-        networkService.getFiveDaysWeather(lat: location.latitude, lon: location.longitude) { (jsonData) in
+        
+        weatherProvider.getWeather(dayCount: .five, lat: location.latitude, lon: location.longitude) { (weather) in
             
-            for weatherJSON in jsonData["list"].arrayValue{
-                if weatherJSON["dt_txt"].stringValue.split(separator: " ")[1].starts(with: "12"){
-                    
-                    let weather = WeatherModel(json: weatherJSON)
-                    
-                    self.weatherArray.append(weather)
-                }
-            }
+            self.weatherArray.append(weather)
             self.tableView.reloadData()
         }
     }
