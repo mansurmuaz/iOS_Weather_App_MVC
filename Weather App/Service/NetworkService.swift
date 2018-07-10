@@ -10,7 +10,12 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-struct NetworkService {
+protocol NetworkServiceProtocol {
+    func getWeather(lat: Double, lon: Double, completion: @escaping (JSON) -> ())
+    func getFiveDaysWeather(lat: Double, lon: Double, completion: @escaping (JSON) -> ())
+}
+
+class NetworkService:NetworkServiceProtocol {
     
     static let sharedInstance = NetworkService()
     
