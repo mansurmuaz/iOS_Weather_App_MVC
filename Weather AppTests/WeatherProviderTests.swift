@@ -12,13 +12,13 @@ import XCTest
 class WeatherProviderTests: XCTestCase {
 
     let networkServiceMock = NetworkServiceMock.sharedInstance
-    
+
     func testGetWeatherWithOneDayCount_CallsGetOneDayWeather() {
-        
+
         let oneDayExpectation = self.expectation(description: "Getting data from weather provider for 1 day.")
-        
+
         let weatherProvider: WeatherProviderProtocol = WeatherProvider(networkService: self.networkServiceMock)
-        weatherProvider.getWeather(dayCount: .one,  lat: 41, lon: 29) { (weather) in
+        weatherProvider.getWeather(dayCount: .one, lat: 41, lon: 29) { (_) in
             XCTAssertTrue(self.networkServiceMock.getOneDayWeatherCalled)
             XCTAssertEqual(self.networkServiceMock.lat, 41)
             XCTAssertEqual(self.networkServiceMock.lon, 29)
@@ -26,13 +26,13 @@ class WeatherProviderTests: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
+
     func testGetWeatherWithFiveDaysCount_CallsGetFiveDaysWeather() {
-        
+
         let fiveDaysExpectation = self.expectation(description: "Getting data from weather provider for 5 days.")
-        
+
         let weatherProvider: WeatherProviderProtocol = WeatherProvider(networkService: self.networkServiceMock)
-        weatherProvider.getWeather(dayCount: .five,  lat: 41, lon: 29) { (weather) in
+        weatherProvider.getWeather(dayCount: .five, lat: 41, lon: 29) { (_) in
             XCTAssertTrue(self.networkServiceMock.getFiveDaysWeatherCalled)
             XCTAssertEqual(self.networkServiceMock.lat, 41)
             XCTAssertEqual(self.networkServiceMock.lon, 29)

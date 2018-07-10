@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 
 class WeatherModel {
-    
+
     var name: String
     var degree: Int
     var weather: String
@@ -30,7 +30,7 @@ class WeatherModel {
         self.humidity = json["main"]["humidity"].intValue
         self.date = json["dt_txt"].stringValue
         self.unit = "ºC"
-        
+
         switch json["weather"][0]["icon"].stringValue {
         case "01d": //clear
             self.image = #imageLiteral(resourceName: "backgroundImage")

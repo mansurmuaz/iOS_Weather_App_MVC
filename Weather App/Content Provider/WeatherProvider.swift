@@ -10,24 +10,25 @@ import Foundation
 import SwiftyJSON
 
 protocol WeatherProviderProtocol {
-    func getWeather(dayCount: dayCount, lat: Double, lon:Double, completion: @escaping (WeatherModel) -> ())
+    
+    func getWeather(dayCount: DayCount, lat: Double, lon: Double, completion: @escaping (WeatherModel) -> Void)
 }
 
-enum dayCount {
+enum DayCount {
     case one
     case five
 }
 
 class WeatherProvider: WeatherProviderProtocol {
-    
+
     let networkService: NetworkServiceProtocol
-    
+
     init(networkService: NetworkServiceProtocol) {
         self.networkService = networkService
     }
-    
-    func getWeather(dayCount: dayCount, lat: Double, lon: Double, completion: @escaping (WeatherModel) -> ()) {
-        
+
+    func getWeather(dayCount: DayCount, lat: Double, lon: Double, completion: @escaping (WeatherModel) -> Void) {
+
         switch dayCount {
         case .one:
             networkService.getWeather(lat: lat, lon: lon) { (json) in
@@ -35,8 +36,8 @@ class WeatherProvider: WeatherProviderProtocol {
             }
         case .five:
             networkService.getFiveDaysWeather(lat: lat, lon: lon) { (json) in
-                for weatherJSON in json["list"].arrayValue{
-                    if weatherJSON["dt_txt"].stringValue.split(separator: " ")[1].starts(with: "12"){
+                for weatherJSON in json["list"].arrayValue {
+                    if weatherJSON["dt_txt"].stringValue.split(separator: " ")[1].starts(with: "12") {
                         completion(WeatherModel(json: weatherJSON))
                     }
                 }

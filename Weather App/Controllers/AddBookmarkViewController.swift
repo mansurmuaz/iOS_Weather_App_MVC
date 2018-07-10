@@ -14,50 +14,49 @@ import CoreData
 class AddBookmarkViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
-    var appDelegate: AppDelegate!
+    
     var context: NSManagedObjectContext!
 
-    let locationManager:CLLocationManager = CLLocationManager()
+    let locationManager: CLLocationManager = CLLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        appDelegate = UIApplication.shared.delegate as! AppDelegate
-        context = appDelegate.persistentContainer.viewContext
-        
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
+
+        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+            context = delegate.persistentContainer.viewContext
+            
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                locationManager.startUpdatingLocation()
+            }
+            
+            let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(press:)))
+            
+            mapView.addGestureRecognizer(longPressGestureRecognizer)
         }
-        
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(press:)))
-        
-        mapView.addGestureRecognizer(longPressGestureRecognizer)
-        
     }
 
-    
-    @objc func addAnnotation(press: UILongPressGestureRecognizer){
-        
+    @objc func addAnnotation(press: UILongPressGestureRecognizer) {
+
         if press.state == .began {
-            
+
             mapView.removeAnnotations(mapView.annotations)
-            
+
             let pressedLocation = press.location(in: mapView)
             let coordinates = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
-            
+
             let location = CLLocation.init( latitude: coordinates.latitude, longitude: coordinates.longitude)
-            
+
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinates
-            
+
             CLGeocoder().reverseGeocodeLocation(location) { (placemark, error) in
                 if error != nil {
                     print(error.debugDescription)
-                }else{
-                    if let place = placemark?[0]{
-                        if let locality = place.locality{
+                } else {
+                    if let place = placemark?[0] {
+                        if let locality = place.locality {
                             annotation.title = locality
                         }
                     }
@@ -66,49 +65,46 @@ class AddBookmarkViewController: UIViewController {
             mapView.addAnnotation(annotation)
         }
     }
-    
-    @IBAction func saveButtonTapped(_ sender: Any) {
-        
-        if mapView.annotations.count > 1 {
-           
-            for annotation in mapView.annotations{
-                if annotation.title != "My Location"{
-                    let latitude = annotation.coordinate.latitude
-                    let longitude = annotation.coordinate.longitude
 
-                    let newLocation = NSEntityDescription.insertNewObject(forEntityName: "Location", into: context)
-                    
-                    newLocation.setValue(latitude, forKey: "latitude")
-                    newLocation.setValue(longitude, forKey: "longitude")
-                    
-                    if let locality = annotation.title{
-                        if locality != "" && locality != nil {
-                            newLocation.setValue(locality, forKey: "name")
-                        }else{
-                            newLocation.setValue("Unknown Location", forKey: "name")
-                        }
-                    }else{
+    @IBAction func saveButtonTapped(_ sender: Any) {
+
+        if mapView.annotations.count > 1 {
+
+            for annotation in mapView.annotations where annotation.title != "My Location" {
+                let latitude = annotation.coordinate.latitude
+                let longitude = annotation.coordinate.longitude
+                
+                let newLocation = NSEntityDescription.insertNewObject(forEntityName: "Location", into: context)
+                
+                newLocation.setValue(latitude, forKey: "latitude")
+                newLocation.setValue(longitude, forKey: "longitude")
+                
+                if let locality = annotation.title {
+                    if locality != "" && locality != nil {
+                        newLocation.setValue(locality, forKey: "name")
+                    } else {
                         newLocation.setValue("Unknown Location", forKey: "name")
                     }
-                    do {
-                        try context.save()
-                    }catch{
-                        print("Error while saving")
-                    }
-                    navigationController?.popViewController(animated: true)
+                } else {
+                    newLocation.setValue("Unknown Location", forKey: "name")
                 }
+                do {
+                    try context.save()
+                } catch {
+                    print("Error while saving")
+                }
+                navigationController?.popViewController(animated: true)
             }
-        }else{
+        } else {
             print("add annotation alert")
         }
     }
 }
 
+extension AddBookmarkViewController: CLLocationManagerDelegate {
 
-extension AddBookmarkViewController: CLLocationManagerDelegate{
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+
         if let location = locations.first {
             let lon = location.coordinate.longitude
             let lat = location.coordinate.latitude
@@ -116,12 +112,11 @@ extension AddBookmarkViewController: CLLocationManagerDelegate{
             let location = CLLocationCoordinate2DMake(lat, lon)
             let span = MKCoordinateSpanMake(0.5, 0.5)
             let region = MKCoordinateRegionMake(location, span)
-            
+
             self.mapView.setRegion(region, animated: true)
             self.mapView.showsUserLocation = true
-            
+
             manager.stopUpdatingLocation()
         }
     }
 }
-
