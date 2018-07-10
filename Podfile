@@ -8,6 +8,7 @@ target 'Weather App' do
   # Pods for Weather App
  	pod 'Alamofire', '~> 4.7'
 	pod 'SwiftyJSON', '~> 4.0'
+	pod 'SwiftLint'
 
   target 'Weather AppTests' do
     inherit! :search_paths
