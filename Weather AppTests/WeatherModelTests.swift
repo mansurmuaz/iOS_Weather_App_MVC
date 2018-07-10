@@ -1,8 +1,8 @@
 //
-//  Weather_AppTests.swift
+//  WeatherModelTests.swift
 //  Weather AppTests
 //
-//  Created by Mansur Muaz  Ekici on 3.07.2018.
+//  Created by Mansur Muaz  Ekici on 10.07.2018.
 //  Copyright © 2018 Adesso. All rights reserved.
 //
 
@@ -10,18 +10,17 @@ import XCTest
 @testable import Weather_App
 import SwiftyJSON
 
-class Weather_AppTests: XCTestCase {
+class WeatherModelTests: XCTestCase {
     
     var expectedResult = JSON()
     let jsonString = "{\"coord\":{\"lon\":-122.09,\"lat\":37.39},\n\"sys\":{\"type\":3,\"id\":168940,\"message\":0.0297,\"country\":\"US\",\"sunrise\":1427723751,\"sunset\":1427768967},\n\"weather\":[{\"id\":800,\"main\":\"Clear\",\"description\":\"Sky is Clear\",\"icon\":\"01n\"}],\n\"base\":\"stations\",\n\"main\":{\"temp\":285.68,\"humidity\":74,\"pressure\":1016.8,\"temp_min\":284.82,\"temp_max\":286.48},\n\"wind\":{\"speed\":0.96,\"deg\":285.001},\n\"clouds\":{\"all\":0},\n\"dt\":1427700245,\n\"id\":0,\n\"name\":\"Mountain View\",\n\"cod\":200}"
-    
     
     override func setUp() {
         super.setUp()
         expectedResult = JSON(parseJSON: self.jsonString)
     }
     
-    func testWeatherModel(){
+    func testWeatherModelWithStaticJsonString_ReturnsWeatherModel(){
         let weatherModel = WeatherModel(json: expectedResult)
         
         XCTAssertEqual(weatherModel.name, "Mountain View")
@@ -35,25 +34,4 @@ class Weather_AppTests: XCTestCase {
         XCTAssertEqual(weatherModel.image,  #imageLiteral(resourceName: "clear sky night"))
     }
     
-    
-    
-    func testOneDayWeatherProvider() {
-        let networkServiceMock = NetworkServiceMock.sharedInstance
-        let weatherProvider: WeatherProviderProtocol = WeatherProvider(networkService: networkServiceMock)
-        weatherProvider.getWeather(dayCount: .one,  lat: 41, lon: 29) { (weather) in
-            XCTAssertTrue(networkServiceMock.getWeatherCalled)
-            XCTAssertEqual(networkServiceMock.lat, 41)
-            XCTAssertEqual(networkServiceMock.lon, 29)
-        }
-    }
-    
-    func testFiveDayWeatherProvider() {
-        let networkServiceMock = NetworkServiceMock.sharedInstance
-        let weatherProvider: WeatherProviderProtocol = WeatherProvider(networkService: networkServiceMock)
-        weatherProvider.getWeather(dayCount: .five,  lat: 41, lon: 29) { (weather) in
-            XCTAssertTrue(networkServiceMock.getWeatherCalled)
-            XCTAssertEqual(networkServiceMock.lat, 41)
-            XCTAssertEqual(networkServiceMock.lon, 29)
-        }
-    }
 }
